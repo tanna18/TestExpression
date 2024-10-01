@@ -7,11 +7,10 @@ public class ParserTest {
 
     @Test
     public void testValidExpressions() {
+
         List<String> expectedValid = new ArrayList<>();
         expectedValid.add("(2+1)*2");
-        expectedValid.add("((2+1)-(3-4))+"); // Ошибочное выражение
         expectedValid.add("(2)");
-        expectedValid.add("(2)+"); // Ошибочное выражение
         expectedValid.add("3+(4*5)-2");
         expectedValid.add("((10/(5+5))*(6-4))");
         expectedValid.add("(7+8*(9-3))/(2+1)");
@@ -29,6 +28,12 @@ public class ParserTest {
         expectedValid.add("(10-(3+2))*(4+1)");
         expectedValid.add("((4+6)*(8/2))/(5-1)");
         expectedValid.add("(7-(2+3))*(9+1)");
+        expectedValid.add("-2");
+        expectedValid.add("-(2)");
+        expectedValid.add("-(1+2)");
+        expectedValid.add("-2+1");
+        expectedValid.add("-2-(2)");
+
 
         List<String> actualValid = new ArrayList<>();
         List<String> failedValid = new ArrayList<>();  // Список для неуспешных валидных выражений

@@ -16,6 +16,14 @@ public class Parser {
     private boolean parseExpression() {
         if (index >= expression.length()) return false;
 
+        // Обработка унарного минуса
+        if (expression.charAt(index) == '-') {
+            index++;
+            if (!parseExpression()) return false;
+            return true;
+        }
+
+        // Обработка чисел и скобок
         if (Character.isDigit(expression.charAt(index))) {
             parseNumber();
         } else if (expression.charAt(index) == '(') {
@@ -27,6 +35,7 @@ public class Parser {
             return false;
         }
 
+        // Обработка операторов
         if (index < expression.length() && isOperator(expression.charAt(index))) {
             index++;
             return parseExpression();
@@ -60,5 +69,18 @@ public class Parser {
 
         Parser parser5 = new Parser("(2)+");
         System.out.println(parser5.parseExpr()); // false
+
+        // Проверка унарного минуса
+        Parser parser6 = new Parser("-2");
+        System.out.println(parser6.parseExpr()); // true
+
+        Parser parser7 = new Parser("-(2)");
+        System.out.println(parser7.parseExpr()); // true
+
+        Parser parser8 = new Parser("-(2+3)");
+        System.out.println(parser8.parseExpr()); // true
+
+        Parser parser9 = new Parser("-(2+3)*4");
+        System.out.println(parser9.parseExpr()); // true
     }
 }

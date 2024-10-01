@@ -33,7 +33,15 @@ public class ParserTest {
         expectedValid.add("-(1+2)");
         expectedValid.add("-2+1");
         expectedValid.add("-2-(2)");
-
+        expectedValid.add("122 + 1");
+        expectedValid.add("122 + 1 ");
+        expectedValid.add(" 122 + 1");
+        expectedValid.add("122 + (1 ) ");
+        expectedValid.add("122 + ( 1)");
+        expectedValid.add("122 + ( 1 )");
+        expectedValid.add("122 + (   1  )");
+        expectedValid.add("122 + (   1)");
+        expectedValid.add("   122 + ( 1)");
 
         List<String> actualValid = new ArrayList<>();
         List<String> failedValid = new ArrayList<>();  // Список для неуспешных валидных выражений

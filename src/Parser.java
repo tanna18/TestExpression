@@ -16,12 +16,18 @@ public class Parser {
     private boolean parseExpression() {
         if (index >= expression.length()) return false;
 
+        // Пропуск пробелов
+        skipWhitespace();
+
         // Обработка унарного минуса
         if (expression.charAt(index) == '-') {
             index++;
             if (!parseExpression()) return false;
             return true;
         }
+
+        // Пропуск пробелов
+        skipWhitespace();
 
         // Обработка чисел и скобок
         if (Character.isDigit(expression.charAt(index))) {
@@ -35,6 +41,9 @@ public class Parser {
             return false;
         }
 
+        // Пропуск пробелов
+        skipWhitespace();
+
         // Обработка операторов
         if (index < expression.length() && isOperator(expression.charAt(index))) {
             index++;
@@ -43,7 +52,11 @@ public class Parser {
 
         return true;
     }
-
+    private void skipWhitespace() {
+        while (index < expression.length() && Character.isWhitespace(expression.charAt(index))) {
+            index++;
+        }
+    }
     private void parseNumber() {
         while (index < expression.length() && Character.isDigit(expression.charAt(index))) {
             index++;

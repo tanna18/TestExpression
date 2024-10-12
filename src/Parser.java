@@ -16,8 +16,8 @@ public class Parser {
     private boolean parseExpression() {
         if (index >= expression.length()) return false;
 
-        // Пропуск пробелов
-        skipWhitespace();
+        // Пропуск пробелов и комментариев
+        skipWhitespaceAndComments();
 
         // Обработка унарного минуса
         if (expression.charAt(index) == '-') {
@@ -26,8 +26,8 @@ public class Parser {
             return true;
         }
 
-        // Пропуск пробелов
-        skipWhitespace();
+        // Пропуск пробелов и комментариев
+        skipWhitespaceAndComments();
 
         // Обработка чисел и скобок
         if (Character.isDigit(expression.charAt(index))) {
@@ -41,8 +41,8 @@ public class Parser {
             return false;
         }
 
-        // Пропуск пробелов
-        skipWhitespace();
+        // Пропуск пробелов и комментариев
+        skipWhitespaceAndComments();
 
         // Обработка операторов
         if (index < expression.length() && isOperator(expression.charAt(index))) {
@@ -52,11 +52,36 @@ public class Parser {
 
         return true;
     }
-    private void skipWhitespace() {
-        while (index < expression.length() && Character.isWhitespace(expression.charAt(index))) {
-            index++;
+
+    // Пропускаем пробелы, переносы строк и комментарии
+    private void skipWhitespaceAndComments() {
+        while (index < expression.length()) {
+            char c = expression.charAt(index);
+            if (Character.isWhitespace(c) || c == '\n' || c == '\r') {
+                index++;
+            } else if (c == '/' && index + 1 < expression.length()) {
+                if (expression.charAt(index + 1) == '/') {
+                    // Пропускаем однострочный комментарий
+                    index += 2;
+                    while (index < expression.length() && expression.charAt(index) != '\n' && expression.charAt(index) != '\r') {
+                        index++;
+                    }
+                } else if (expression.charAt(index + 1) == '*') {
+                    // Пропускаем многострочный комментарий
+                    index += 2;
+                    while (index + 1 < expression.length() && !(expression.charAt(index) == '*' && expression.charAt(index + 1) == '/')) {
+                        index++;
+                    }
+                    index += 2; // Пропускаем символы '*/'
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
         }
     }
+
     private void parseNumber() {
         while (index < expression.length() && Character.isDigit(expression.charAt(index))) {
             index++;
@@ -95,5 +120,15 @@ public class Parser {
 
         Parser parser9 = new Parser("-(2+3)*4");
         System.out.println(parser9.parseExpr()); // true
+
+        // Проверка комментариев
+        Parser parser10 = new Parser("2 + /* comment */ 3");
+        System.out.println(parser10.parseExpr()); // true
+
+        Parser parser11 = new Parser("2 + 3 // end of line comment");
+        System.out.println(parser11.parseExpr()); // true
+
+        Parser parser12 = new Parser("/* multi-line\ncomment */ 2 + 3");
+        System.out.println(parser12.parseExpr()); // true
     }
 }

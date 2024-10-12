@@ -42,15 +42,35 @@ public class ParserTest {
         expectedValid.add("122 + (   1  )");
         expectedValid.add("122 + (   1)");
         expectedValid.add("   122 + ( 1)");
+        expectedValid.add("122 +\n1");
+        expectedValid.add("122 + (   \n 1  )");
+        expectedValid.add("-2\n-(2\n)");
+        expectedValid.add(" 122 + (//комментарий\n1)");
+        expectedValid.add("122 + (1 ) ");
+        expectedValid.add("(7-\n(2+3))*\n(9+1)");
+        expectedValid.add("((2*3)+(4\n-2))");
+        expectedValid.add("12+((5\n*2))/7");
+        expectedValid.add("(10\n-(3+2))*(4+1)");
+        expectedValid.add("-2\n+3");
+        expectedValid.add("-2-(2\n+3)");
+        expectedValid.add("122\n+1");
+        expectedValid.add("122 + (1\n)");
+        expectedValid.add("2 + 2 // simple addition");  // Комментарий после выражения
+        expectedValid.add("/* comment */ 2 + 2");      // Многострочный комментарий перед выражением
+        expectedValid.add("2 + /* comment */ 2");      // Комментарий внутри выражения
+        expectedValid.add("2 + 2 /* comment */");      // Комментарий после оператора
+        expectedValid.add("(2 + 2) /* sum of two numbers */ * 3"); // Комментарий между операторами
+        expectedValid.add("/* multi-line \n comment */ 2 + 3");    // Многострочный комментарий
+
 
         List<String> actualValid = new ArrayList<>();
-        List<String> failedValid = new ArrayList<>();  // Список для неуспешных валидных выражений
+        List<String> failedValid = new ArrayList<>();
         for (String expr : expectedValid) {
             Parser parser = new Parser(expr);
             if (parser.parseExpr()) {
                 actualValid.add(expr);
             } else {
-                failedValid.add(expr);  // Добавляем ошибочные валидные выражения
+                failedValid.add(expr);
             }
         }
 
@@ -105,3 +125,5 @@ public class ParserTest {
         assertEquals("Expected invalid expressions to match parsing failures", expectedInvalid, actualInvalid);
     }
 }
+//перенос строки чтобы норм был
+//чтобы комментарий проходил
